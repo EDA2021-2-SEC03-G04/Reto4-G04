@@ -25,33 +25,83 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import time
 
+
+default_limit=1000
+sys.setrecursionlimit(default_limit*10)
 
 """
-La vista se encarga de la interacción con el usuario
-Presenta el menu de opciones y por cada seleccion
-se hace la solicitud al controlador para ejecutar la
-operación solicitada
+El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2-(REQ1)  Encontrar puntos de interconexión aérea ")
+    print("3-(REQ2)  Encontrar clústeres de tráfico aéreo ")
+    print("4-(REQ3)  Encontrar la ruta más corta entre ciudades ")
+    print('5-(REQ4)  Utilizar las millas de viajero ')
+    print('6-(REQ5)  Cuantificar el efecto de un aeropuerto cerrado ')
+    print('7-(BONO)  Comparar con servicio WEB externo ')
+
+
+def printEspacio():
+    """
+    añade espacios entre funciones 
+    """
+
+    print("")
+    print("=" * 100)
+    print("")
 
 catalog = None
 
 """
-Menu principal
+Funciones para imprimir 
 """
+
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
+    inputs = input('Seleccione una opción para continuar: ')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        pass
+
 
     elif int(inputs[0]) == 2:
-        pass
+        
+        printEspacio()
+
+        printEspacio()
+
+
+    elif int(inputs[0]) == 3:
+        
+        printEspacio()
+
+        printEspacio()
+
+    
+    elif int(inputs[0])==4:
+
+        printEspacio()
+
+        printEspacio()
+
+
+    elif int(inputs[0])==5:
+
+        printEspacio()
+        
+        printEspacio()
+
+
+    elif int(inputs[0]) == 6:
+        
+        printEspacio()
+
+        printEspacio() 
+        
 
     else:
         sys.exit(0)
