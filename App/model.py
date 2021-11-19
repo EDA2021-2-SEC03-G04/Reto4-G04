@@ -30,6 +30,9 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.ADT import map as m
+from DISClib.ADT.graph import gr
+from DISClib.Utils import error as error
 assert cf
 
 """
@@ -39,12 +42,86 @@ los mismos.
 
 # Construccion de modelos
 
+def newAnalyzer():
+    """ Inicializa el analizador
+
+   stops: Tabla de hash para guardar los vertices del grafo
+   GRAPH: Grafo para representar las rutas entre estaciones
+   components: Almacena la informacion de los componentes conectados
+   paths: Estructura que almancena los caminos de costo minimo desde un
+           vertice determinado a todos los otros vértices del grafo
+    """
+    try:
+        analyzer = {
+                    'airports': None,
+                    'GRAPHD': None,
+                    'components': None,
+                    'paths': None
+                    }
+
+        analyzer['airports'] = m.newMap(numelements=90076,
+                                     maptype='CHAINING',
+                                     comparefunction=compareIATA)
+
+        analyzer['GRAPHD'] = gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=True,
+                                              size=92606,
+                                              comparefunction=compareIATA)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:newAnalyzer')
+
+
 # Funciones para agregar informacion al catalogo
 
+def addAirport(analyzer,airport):
+
+    IATA=airport['IATA']
+    new=newAirport(airport['Name'],airport['City'],airport['Country'],airport['Latitude'],airport['Longitude'])
+    
+
+    #Añade el vertice IATA al GRAPHD
+    GRAPHD=analyzer['GRAPHD']
+    if not( gr.containsVertex(GRAPHD,IATA)):
+        gr.insertVertex(GRAPHD,IATA)
+    #Añade el vertice IATA al hashmap airports
+    airports=analyzer['airports']
+    if not( mp.contains(airports,IATA)):
+        mp.put(airports,IATA,new)
+
+        
+
+
+
 # Funciones para creacion de datos
+
+def newAirport(name,city,country,latitude,longitude):
+
+    airport={'name':name,'city':city,'country':country,'latitude':latitude,'longitude':longitude}
+
+    return airport
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+
+# ==============================
+# Funciones de Comparacion
+# ==============================
+
+
+def compareIATA(iata1, iata2):
+    """
+    Compara dos estaciones
+    """
+   
+    if (iata1 == iata2):
+        return 0
+    elif (iata1 > iata2):
+        return 1
+    else:
+        return -1
+
 
 # Funciones de ordenamiento

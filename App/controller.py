@@ -31,8 +31,25 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
+def init():
+    """
+    Llama la funcion de inicializacion  del modelo.
+    """
+    # analyzer es utilizado para interactuar con el modelo
+    analyzer = model.newAnalyzer()
+    return analyzer
+
 # Funciones para la carga de datos
 
+def loadAirports(analyzer):
+    """
+    Carga los artistas archivo.  .
+    """
+    airportsfile = cf.data_dir + 'Skylines/Skylines/airports_full.csv'
+    input_file = csv.DictReader(open(airportsfile, encoding='utf-8'))
+    for airport in input_file:
+        model.addAirport(analyzer, airport)
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
