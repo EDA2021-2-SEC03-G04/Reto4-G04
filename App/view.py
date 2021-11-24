@@ -67,7 +67,10 @@ while True:
     if int(inputs[0]) == 1:
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
-        cont = controller.init()
+        catalog = controller.init()
+        print("\nCargando información....")
+        controller.loadData(catalog)
+        print("se logro")
         
 
 

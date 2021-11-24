@@ -41,14 +41,32 @@ def init():
 
 # Funciones para la carga de datos
 
+def loadData(catalog):
+    """
+    cargamos los datos a las estructuras ya creadas
+    """
+    loadAirports(catalog)
+    loadVuelos(catalog)
+
+
 def loadAirports(analyzer):
     """
     Carga los artistas archivo.  .
     """
-    airportsfile = cf.data_dir + 'Skylines/Skylines/airports_full.csv'
+    airportsfile = cf.data_dir + 'Skylines/airports_full.csv'
     input_file = csv.DictReader(open(airportsfile, encoding='utf-8'))
     for airport in input_file:
         model.addAirport(analyzer, airport)
+
+
+def loadVuelos(analyzer):
+    """
+    carga los vuelos 
+    """
+    Vuelosfile = cf.data_dir + 'Skylines/routes_full.csv'
+    input_file = csv.DictReader(open(Vuelosfile, encoding='utf-8'))
+    for vuelo in input_file:
+        model.addVuelos(analyzer, vuelo)
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

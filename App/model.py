@@ -56,7 +56,8 @@ def newAnalyzer():
                     'airports': None,
                     'GRAPHD': None,
                     'components': None,
-                    'paths': None
+                    'paths': None,
+                    'GRAPHND': None
                     }
 
         analyzer['airports'] = m.newMap(numelements=90076,
@@ -65,6 +66,11 @@ def newAnalyzer():
 
         analyzer['GRAPHD'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=True,
+                                              size=92606,
+                                              comparefunction=compareIATA)
+
+        analyzer['GRAPHnD'] = gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=False,
                                               size=92606,
                                               comparefunction=compareIATA)
         return analyzer
@@ -76,8 +82,9 @@ def newAnalyzer():
 
 def addAirport(analyzer,airport):
 
-    IATA=airport['IATA']
+    IATA=str(airport['IATA'])
     new=newAirport(airport['Name'],airport['City'],airport['Country'],airport['Latitude'],airport['Longitude'])
+    
     
 
     #Añade el vertice IATA al GRAPHD
@@ -89,8 +96,28 @@ def addAirport(analyzer,airport):
     if not( mp.contains(airports,IATA)):
         mp.put(airports,IATA,new)
 
-        
+    #Añadir info al No dirigido
+    GRAPHnD=analyzer['GRAPHnD']
+    if not( gr.containsVertex(GRAPHnD,IATA)):
+        gr.insertVertex(GRAPHnD,IATA)
+    
 
+        
+def addVuelos(analyzer, vuelo):
+
+    #sacamos valores
+    inicio = vuelo["Departure"]
+    fin = vuelo["Destination"]
+    distancia = vuelo["distance_km"]
+    GRAPHD=analyzer['GRAPHD']
+    GRAPHnD=analyzer['GRAPHnD']
+
+    #añadimos valores al dirigido
+    gr.addEdge(GRAPHD, inicio, fin, distancia)
+
+    #si exsiste la relacion anterior en sentido contrario se agrega al no dirigido
+    if gr.getEdge(GRAPHD, fin, inicio) != None:
+        gr.addEdge(GRAPHnD, inicio, fin, distancia)
 
 
 # Funciones para creacion de datos
