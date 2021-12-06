@@ -86,7 +86,6 @@ def addAirport(analyzer,airport):
     new=newAirport(airport['Name'],airport['City'],airport['Country'],airport['Latitude'],airport['Longitude'])
     
     
-
     #Añade el vertice IATA al GRAPHD
     GRAPHD=analyzer['GRAPHD']
     if not( gr.containsVertex(GRAPHD,IATA)):
@@ -100,6 +99,7 @@ def addAirport(analyzer,airport):
     GRAPHnD=analyzer['GRAPHnD']
     if not( gr.containsVertex(GRAPHnD,IATA)):
         gr.insertVertex(GRAPHnD,IATA)
+    
     
 
         

@@ -28,7 +28,7 @@ assert cf
 import time
 
 
-default_limit=1000
+default_limit=10000
 sys.setrecursionlimit(default_limit*10)
 
 """
@@ -70,7 +70,7 @@ while True:
         catalog = controller.init()
         print("\nCargando información....")
         controller.loadData(catalog)
-        print("se logro")
+        print("se cargo la informacion")
         
 
 
