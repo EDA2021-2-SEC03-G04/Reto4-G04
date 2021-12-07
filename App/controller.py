@@ -81,3 +81,5 @@ def loadVuelos(analyzer):
 def AeroCerrado(catalog, cerrado):
     return model.AeroCerrado(catalog, cerrado)
 
+def ComponentesFuertes(catalog, ae1, ae2):
+    return model.ComponentesFuertes(catalog, ae1, ae2)

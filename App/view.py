@@ -80,7 +80,23 @@ def printREQ6(retorno):
         aere = mp.get(catalog["airports"], codigo)["value"]
         print("El aereopuerto " + aere["name"] + " con codigo " + codigo + " de la ciudad " + aere["city"] + " y del pais " + aere["country"])
 
+def printREQ2(retorno, ae1, ae2):
 
+    print("Existen " + str(retorno[0]) + " css")
+    if retorno[1]:
+        print("Los aereopuertos estan fuertemente conectados")
+    else:
+        print("los componetes no estan fuertemente conectados")
+
+    print("")
+    print("aereopuerto 1: ")
+    aere1 = mp.get(catalog["airports"], ae1)["value"]
+    print("El aereopuerto " + aere1["name"] + " con codigo " + ae1 + " de la ciudad " + aere1["city"] + " y del pais " + aere1["country"])
+
+    print("")
+    print("aereopuerto 2: ")
+    aere2 = mp.get(catalog["airports"], ae2)["value"]
+    print("El aereopuerto " + aere2["name"] + " con codigo " + ae2 + " de la ciudad " + aere2["city"] + " y del pais " + aere2["country"])
 
 
 
@@ -126,9 +142,16 @@ while True:
         printEspacio()
 
 
-    elif int(inputs[0]) == 3:
+    elif int(inputs[0]) == 3: #REQ2
         
         printEspacio()
+
+        ae1 = input("Codigo IATA del aereopuerto 1(LED): ")
+        ae2 = input("Codigo IATA del aereopuerto 2(RTP): ")
+        print("")
+        retorno = controller.ComponentesFuertes(catalog, ae1, ae2)
+
+        printREQ2(retorno, ae1, ae2)
 
         printEspacio()
 
@@ -147,11 +170,12 @@ while True:
         printEspacio()
 
 
-    elif int(inputs[0]) == 6:
+    elif int(inputs[0]) == 6: #REQ5
         
         printEspacio()
 
         cerrado = input("Cual es el aereopuerto cerrado(DXB): ")
+        print("")
 
         retorno = controller.AeroCerrado(catalog, cerrado)
 

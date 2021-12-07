@@ -30,6 +30,8 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.ADT import map as m
 from DISClib.ADT.graph import gr
 from DISClib.Utils import error as error
@@ -172,3 +174,12 @@ def AeroCerrado(catalog, cerrado):
     retorno2 = gr.degree(principal, cerrado)
 
     return [retorno1, retorno2]
+
+def ComponentesFuertes(catalog, ae1, ae2):
+    principal = catalog["GRAPHD"]
+    kosa = scc.KosarajuSCC(principal)
+    cantidad = scc.connectedComponents(kosa)
+
+    conectados = scc.stronglyConnected(kosa, ae1, ae2)
+
+    return[cantidad, conectados]
