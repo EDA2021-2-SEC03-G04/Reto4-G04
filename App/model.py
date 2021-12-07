@@ -119,8 +119,8 @@ def addVuelos(analyzer, vuelo):
 
 
     #añadimos valores al dirigido
-    if gr.getEdge(GRAPHD, inicio, inicio) != None:
-        gr.addEdge(GRAPHD, inicio, fin, distancia)
+    
+    gr.addEdge(GRAPHD, inicio, fin, distancia)
     
 
     #si exsiste la relacion anterior en sentido contrario se agrega al no dirigido
@@ -163,3 +163,12 @@ def compareIATA(iata1, iata2):
 
 
 # Funciones de ordenamiento
+
+def AeroCerrado(catalog, cerrado):
+    
+    principal = catalog["GRAPHD"]
+
+    retorno1 = gr.adjacents(principal, cerrado)
+    retorno2 = gr.degree(principal, cerrado)
+
+    return [retorno1, retorno2]

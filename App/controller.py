@@ -53,16 +53,12 @@ def loadAirports(analyzer):
     """
     Carga los artistas archivo.  .
     """
-    errores = 0
-    airportsfile = cf.data_dir + 'Skylines/airports-utf8-small.csv'
+    airportsfile = cf.data_dir + 'Skylines/airports-utf8-large.csv'
     input_file = csv.DictReader(open(airportsfile, encoding='utf-8'))
     for airport in input_file:
 
-        try:
-            model.addAirport(analyzer, airport)
-        except:
-            errores +=1
-    print(errores)
+        model.addAirport(analyzer, airport)
+        
     
     
 
@@ -71,18 +67,17 @@ def loadVuelos(analyzer):
     """
     carga los vuelos 
     """
-    errores = 0
-    Vuelosfile = cf.data_dir + 'Skylines/routes-utf8-small.csv'
+    
+    Vuelosfile = cf.data_dir + 'Skylines/routes-utf8-large.csv'
     input_file = csv.DictReader(open(Vuelosfile, encoding='utf-8'))
     for vuelo in input_file:
 
-        #try:
         model.addVuelos(analyzer, vuelo)
-        #except:
-            #errores +=1
 
-    #print(errores)
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def AeroCerrado(catalog, cerrado):
+    return model.AeroCerrado(catalog, cerrado)
 

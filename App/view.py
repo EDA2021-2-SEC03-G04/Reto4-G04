@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT.graph import gr
+from DISClib.ADT import map as mp
 assert cf
 import time
 
@@ -55,23 +57,66 @@ def printEspacio():
     print("=" * 100)
     print("")
 
-catalog = None
+
+def printREQ6(retorno):
+    aereo = retorno[0]
+    rutas = retorno[1]
+
+    print("Si se cierra este aereopurto se afectan " + str(lt.size(aereo)) + " aereopuertos y " + str(rutas) + " rutas")
+
+    print()
+
+    print("El top 3 primeros: ")
+
+    for x in range(3):
+        codigo = lt.getElement(aereo, x+1) 
+        aere = mp.get(catalog["airports"], codigo)["value"]
+        print("El aereopuerto " + aere["name"] + " con codigo " + codigo + " de la ciudad " + aere["city"] + " y del pais " + aere["country"])
+
+    print("El top 3 ultimos: ")
+
+    for x in range(3):
+        codigo = lt.getElement(aereo, lt.size(aereo)-x) 
+        aere = mp.get(catalog["airports"], codigo)["value"]
+        print("El aereopuerto " + aere["name"] + " con codigo " + codigo + " de la ciudad " + aere["city"] + " y del pais " + aere["country"])
+
+
+
+
 
 """
 Funciones para imprimir 
 """
 
+catalog = None
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar: ')
     if int(inputs[0]) == 1:
+
+        printEspacio()
+
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
         catalog = controller.init()
         print("\nCargando información....")
         controller.loadData(catalog)
         print("se cargo la informacion")
+
+        print("DiGrafo: ")
+        print("")
+        print("Aereopuetos: " + str(gr.numVertices(catalog["GRAPHD"])) )
+        print("Rutas: " + str(gr.numEdges(catalog["GRAPHD"])))
+
+        print("")
+
+        print("Grafo: ")
+        print("")
+        print("Aereopuetos: " + str(gr.numVertices(catalog["GRAPHND"])) )
+        print("Rutas: " + str(gr.numEdges(catalog["GRAPHND"])))
         
+        printEspacio()
 
 
     elif int(inputs[0]) == 2:
@@ -105,6 +150,12 @@ while True:
     elif int(inputs[0]) == 6:
         
         printEspacio()
+
+        cerrado = input("Cual es el aereopuerto cerrado(DXB): ")
+
+        retorno = controller.AeroCerrado(catalog, cerrado)
+
+        printREQ6(retorno)
 
         printEspacio() 
         
