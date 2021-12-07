@@ -54,7 +54,7 @@ def loadAirports(analyzer):
     Carga los artistas archivo.  .
     """
     errores = 0
-    airportsfile = cf.data_dir + 'Skylines/airports_full.csv'
+    airportsfile = cf.data_dir + 'Skylines/airports-utf8-small.csv'
     input_file = csv.DictReader(open(airportsfile, encoding='utf-8'))
     for airport in input_file:
 
@@ -72,7 +72,7 @@ def loadVuelos(analyzer):
     carga los vuelos 
     """
     errores = 0
-    Vuelosfile = cf.data_dir + 'Skylines/routes_full.csv'
+    Vuelosfile = cf.data_dir + 'Skylines/routes-utf8-small.csv'
     input_file = csv.DictReader(open(Vuelosfile, encoding='utf-8'))
     for vuelo in input_file:
 
