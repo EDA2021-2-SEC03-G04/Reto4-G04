@@ -34,6 +34,7 @@ from DISClib.ADT import map as m
 from DISClib.ADT.graph import gr
 from DISClib.Utils import error as error
 assert cf
+import math
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -69,10 +70,12 @@ def newAnalyzer():
                                               size=92606,
                                               comparefunction=compareIATA)
 
-        analyzer['GRAPHnD'] = gr.newGraph(datastructure='ADJ_LIST',
+        analyzer['GRAPHND'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=False,
                                               size=92606,
                                               comparefunction=compareIATA)
+
+                                           
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -96,9 +99,9 @@ def addAirport(analyzer,airport):
         mp.put(airports,IATA,new)
 
     #Añadir info al No dirigido
-    GRAPHnD=analyzer['GRAPHnD']
-    if not( gr.containsVertex(GRAPHnD,IATA)):
-        gr.insertVertex(GRAPHnD,IATA)
+    GRAPHND=analyzer['GRAPHND']
+    if not( gr.containsVertex(GRAPHND,IATA)):
+        gr.insertVertex(GRAPHND,IATA)
     
     
 
@@ -106,18 +109,23 @@ def addAirport(analyzer,airport):
 def addVuelos(analyzer, vuelo):
 
     #sacamos valores
-    inicio = vuelo["Departure"]
-    fin = vuelo["Destination"]
+    inicio = str(vuelo["Departure"])
+    fin = str(vuelo["Destination"])
     distancia = vuelo["distance_km"]
     GRAPHD=analyzer['GRAPHD']
-    GRAPHnD=analyzer['GRAPHnD']
+    GRAPHND=analyzer['GRAPHND']
+    distancia=int(math.floor(float(distancia)))
+    
+
 
     #añadimos valores al dirigido
-    gr.addEdge(GRAPHD, inicio, fin, distancia)
+    if gr.getEdge(GRAPHD, inicio, inicio) != None:
+        gr.addEdge(GRAPHD, inicio, fin, distancia)
+    
 
     #si exsiste la relacion anterior en sentido contrario se agrega al no dirigido
     if gr.getEdge(GRAPHD, fin, inicio) != None:
-        gr.addEdge(GRAPHnD, inicio, fin, distancia)
+        gr.addEdge(GRAPHND, inicio, fin, distancia)
 
 
 # Funciones para creacion de datos
@@ -142,7 +150,10 @@ def compareIATA(iata1, iata2):
     """
     Compara dos estaciones
     """
-   
+    
+    iata2=iata2['key']
+    
+
     if (iata1 == iata2):
         return 0
     elif (iata1 > iata2):
