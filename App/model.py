@@ -355,7 +355,7 @@ def viajeCiudades(catalog,city1,city2):
         print('No hay camino')
     """
 
-def AeroInter(catalog):
+def AeroInter(catalog): 
     '''
     Funcion que calcula el top 5 aeropuertos más interconectados
     '''
