@@ -32,11 +32,13 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.ADT import stack
 from DISClib.ADT import map as m
 from DISClib.ADT.graph import gr
 from DISClib.Utils import error as error
 assert cf
 import math
+from math import radians, cos, sin, asin, sqrt
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -60,12 +62,25 @@ def newAnalyzer():
                     'GRAPHD': None,
                     'components': None,
                     'paths': None,
-                    'GRAPHND': None
+                    'GRAPHND': None,
+                    "city":None
                     }
 
         analyzer['airports'] = m.newMap(numelements=90076,
                                      maptype='CHAINING',
                                      comparefunction=compareIATA)
+
+        analyzer['airportsByCity'] = m.newMap(numelements=90076,
+                                     maptype='CHAINING',
+                                     comparefunction=compareIATA)
+
+        analyzer['cityCant'] = m.newMap(numelements=41076,
+                                     maptype='CHAINING',
+                                     )
+
+        analyzer['cityList'] = m.newMap(numelements=41076,
+                                     maptype='CHAINING',
+                                     )
 
         analyzer['GRAPHD'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=True,
@@ -88,8 +103,8 @@ def newAnalyzer():
 def addAirport(analyzer,airport):
 
     IATA=str(airport['IATA'])
-    new=newAirport(airport['Name'],airport['City'],airport['Country'],airport['Latitude'],airport['Longitude'])
-    
+    new=newAirport(airport['Name'],airport['City'],airport['Country'],airport['Latitude'],airport['Longitude'], airport['IATA'])
+    city=airport['City']
     
     #Añade el vertice IATA al GRAPHD
     GRAPHD=analyzer['GRAPHD']
@@ -104,6 +119,15 @@ def addAirport(analyzer,airport):
     GRAPHND=analyzer['GRAPHND']
     if not( gr.containsVertex(GRAPHND,IATA)):
         gr.insertVertex(GRAPHND,IATA)
+
+    if mp.contains( analyzer['airportsByCity'], city):
+        old=mp.get(analyzer["airportsByCity"], city)["value"]
+        lt.addLast(old, new)
+        mp.put(analyzer["airportsByCity"], city, old)
+    else:
+        nuevo=lt.newList()
+        lt.addLast(nuevo, new)
+        mp.put(analyzer["airportsByCity"],  city, nuevo)
     
     
 
@@ -130,11 +154,41 @@ def addVuelos(analyzer, vuelo):
         gr.addEdge(GRAPHND, inicio, fin, distancia)
 
 
+def addCity(analyzer, city):
+
+    
+    new={"city":city["city"], "country":city["country"], "lat":city["lat"], "lng":city["lng"], "population":city["population"]}
+    key=city["city"]
+    key2=key
+    
+    
+    repes=0
+
+    while mp.contains(analyzer["cityCant"], key2):
+        repes+=1
+        key2=key2+str(repes)
+    
+    nuevo=lt.newList()
+    lt.addLast(nuevo, new)
+    mp.put(analyzer["cityCant"],  key2, nuevo)
+
+    #Dos formas
+
+    if mp.contains(analyzer["cityList"], key):
+        old=mp.get(analyzer["cityList"], key)["value"]
+        lt.addLast(old, new)
+        mp.put(analyzer["cityList"], key, old)
+    else:
+        nuevo=lt.newList()
+        lt.addLast(nuevo, new)
+        mp.put(analyzer["cityList"],  key, nuevo)
+
+
 # Funciones para creacion de datos
 
-def newAirport(name,city,country,latitude,longitude):
+def newAirport(name,city,country,latitude,longitude,IATA):
 
-    airport={'name':name,'city':city,'country':country,'latitude':latitude,'longitude':longitude}
+    airport={'name':name,'city':city,'country':country,'latitude':latitude,'longitude':longitude, "IATA":IATA}
 
     return airport
 
@@ -183,3 +237,167 @@ def ComponentesFuertes(catalog, ae1, ae2):
     conectados = scc.stronglyConnected(kosa, ae1, ae2)
 
     return[cantidad, conectados]
+
+def viajeCiudades(catalog,city1,city2):
+    #determinar ciudad
+
+    principal = catalog["cityList"]
+    Aereopuertos = catalog["airportsByCity"]
+    grafo = catalog["GRAPHD"]
+
+    listaC1 = mp.get(principal, city1)["value"]
+    listaC2 = mp.get(principal, city2)["value"]
+
+    C1 = None
+    C2 = None
+
+    if lt.size(listaC1) >1:
+        print("Encontramos ciudades omonimas")
+        print("")
+        
+        for x in range(lt.size(listaC1)):
+            elemento = lt.getElement(listaC1, x+1)
+            print(str(x+1)+ ")" + elemento["city"] + " en " + elemento["country"] + " con latitud " +  elemento["lat"] + " y longitud " +  elemento["lng"])
+            print("")
+
+        posi = int(input("Elige 1: "))
+        print("")
+
+        C1 = lt.getElement(listaC1, posi)
+    else:
+        C1 = lt.getElement(listaC1, 1)
+
+    if lt.size(listaC2) >1:
+        print("Encontramos ciudades omonimas")
+        print("")
+        
+        for x in range(lt.size(listaC2)):
+            elemento = lt.getElement(listaC2, x+1)
+            print(str(x+1)+ ")" + elemento["city"] + " en " + elemento["country"] + " con latitud " +  elemento["lat"] + " y longitud " +  elemento["lng"])
+            print("")
+
+        posi = int(input("Elige 1: "))
+        print("")
+
+        C2 = lt.getElement(listaC2, posi)
+    else:
+        C2 = lt.getElement(listaC2, 1)
+
+
+    C1Aereo = mp.get(Aereopuertos,C1["city"])["value"]
+    C2Aereo = mp.get(Aereopuertos,C2["city"])["value"]
+
+    salida = None
+    llegada = None
+
+    #para ciudad 1
+
+    if lt.size(C1Aereo) > 1:
+        
+        val = []
+        for x in range(lt.size(C1Aereo)):
+            aereo = lt.getElement(C1Aereo, x+1)
+            latAE = aereo["latitude"]
+            longAE = aereo["longitude"]
+            latC1 = C1["lat"]
+            longC1 = C1["lng"]
+            dist = haversine(float(longAE), float(latAE), float(longC1), float(latC1))
+            val.append(dist)
+
+        minimo = min(val)
+
+        posi = val.index(minimo) 
+
+        salida = lt.getElement(C1Aereo, posi)
+    else:
+        salida = lt.getElement(C1Aereo, 1)
+
+    #para ciudad 2
+
+    if lt.size(C2Aereo) > 1:
+        
+        val = []
+        for x in range(lt.size(C2Aereo)):
+            aereo = lt.getElement(C2Aereo, x+1)
+            latAE = aereo["latitude"]
+            longAE = aereo["longitude"]
+            latC2 = C2["lat"]
+            longC2 = C2["lng"]
+            dist = haversine(float(longAE), float(latAE), float(longC2), float(latC2))
+            val.append(dist)
+
+        minimo = min(val)
+
+        posi = val.index(minimo) + 1
+
+        llegada = lt.getElement(C2Aereo, posi)
+    else:
+        llegada = lt.getElement(C2Aereo, 1)
+
+
+    caminos = djk.Dijkstra(grafo, salida["IATA"])
+    ruta = djk.pathTo(caminos, llegada["IATA"])
+
+    return [ruta, salida, llegada]
+
+    """
+    if ruta is not None:
+        
+        while (not stack.isEmpty(ruta)):
+            stop = stack.pop(ruta)
+            print(stop)
+
+    else:
+        print('No hay camino')
+    """
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance in kilometers between two points 
+    on the earth (specified in decimal degrees)
+    Fuente: https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 6371 # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
+    return c * r

@@ -46,7 +46,10 @@ def loadData(catalog):
     cargamos los datos a las estructuras ya creadas
     """
     loadAirports(catalog)
+    print("ya aereopuertos")
     loadVuelos(catalog)
+    print("ya vuelos")
+    loadCity(catalog)
 
 
 def loadAirports(analyzer):
@@ -59,10 +62,6 @@ def loadAirports(analyzer):
 
         model.addAirport(analyzer, airport)
         
-    
-    
-
-
 def loadVuelos(analyzer):
     """
     carga los vuelos 
@@ -74,6 +73,16 @@ def loadVuelos(analyzer):
 
         model.addVuelos(analyzer, vuelo)
 
+def loadCity(analyzer):
+    Cityfile = cf.data_dir + 'Skylines/worldcities-utf8.csv'
+    input_file = csv.DictReader(open(Cityfile, encoding='utf-8'))
+    for city in input_file:
+
+        model.addCity(analyzer, city) 
+
+
+
+
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
@@ -83,3 +92,6 @@ def AeroCerrado(catalog, cerrado):
 
 def ComponentesFuertes(catalog, ae1, ae2):
     return model.ComponentesFuertes(catalog, ae1, ae2)
+
+def viajeCiudades(catalog,city1,city2):
+    return model.viajeCiudades(catalog,city1,city2)

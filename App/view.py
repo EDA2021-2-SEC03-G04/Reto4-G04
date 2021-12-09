@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT.graph import gr
 from DISClib.ADT import map as mp
+from DISClib.ADT import stack
 assert cf
 import time
 
@@ -98,6 +99,45 @@ def printREQ2(retorno, ae1, ae2):
     aere2 = mp.get(catalog["airports"], ae2)["value"]
     print("El aereopuerto " + aere2["name"] + " con codigo " + ae2 + " de la ciudad " + aere2["city"] + " y del pais " + aere2["country"])
 
+def printREQ3(retorno, city1, city2):
+
+    print("De " + city1 + " hasta " + city2)
+    print("")
+
+    aere1 = retorno[1]
+    print("El aereopuerto de salida es: ")
+    print("El aereopuerto " + aere1["name"] + " con codigo " + aere1["IATA"] + " de la ciudad " + aere1["city"] + " y del pais " + aere1["country"])
+    print("")
+
+
+    aere2 = retorno[2]
+    print("El aereopuerto de llegada es: ")
+    print("El aereopuerto " + aere2["name"] + " con codigo " + aere2["IATA"] + " de la ciudad " + aere2["city"] + " y del pais " + aere2["country"])
+    print("")
+
+    print("El camino es: ")
+    print("")
+
+    ruta = retorno[0]
+    intermedios = lt.newList()
+
+    if ruta is not None:
+        
+        while (not stack.isEmpty(ruta)):
+            arco = stack.pop(ruta)
+            print("Desde " + arco["vertexA"] + " hasta " + arco["vertexB"] + " con una distancia de " + str(arco["weight"]))
+            lt.addLast(intermedios, arco["vertexB"])
+
+    lt.removeLast(intermedios)
+
+    print("")
+    print("Los pasos intermedios son: ")
+
+    for x in range(lt.size(intermedios)):
+        elemento = lt.getElement(intermedios, x+1)
+        info = mp.get(catalog["airports"], elemento)["value"]
+        print("El aereopuerto " + info["name"] + " con codigo " + elemento + " de la ciudad " + info["city"] + " y del pais " + info["country"])
+    
 
 
 """
@@ -118,6 +158,7 @@ while True:
         catalog = controller.init()
         print("\nCargando información....")
         controller.loadData(catalog)
+        print("")
         print("se cargo la informacion")
 
         print("DiGrafo: ")
@@ -131,6 +172,12 @@ while True:
         print("")
         print("Aereopuetos: " + str(gr.numVertices(catalog["GRAPHND"])) )
         print("Rutas: " + str(gr.numEdges(catalog["GRAPHND"])))
+
+        print("")
+
+        print("ciudades: ")
+        print("")
+        print("cantidad: " + str(mp.size(catalog["cityCant"])) )
         
         printEspacio()
 
@@ -156,9 +203,17 @@ while True:
         printEspacio()
 
     
-    elif int(inputs[0])==4:
+    elif int(inputs[0])==4: #REQ3
 
         printEspacio()
+
+        city1 = input("Ciudad de salida: ")
+        city2 = input("Ciudad llegada: ")
+        print("")
+        retorno = controller.viajeCiudades(catalog,city1,city2)
+        print("")
+
+        printREQ3(retorno, city1, city2)
 
         printEspacio()
 
