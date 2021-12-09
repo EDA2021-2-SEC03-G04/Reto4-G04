@@ -46,9 +46,7 @@ def loadData(catalog):
     cargamos los datos a las estructuras ya creadas
     """
     loadAirports(catalog)
-    print("ya aereopuertos")
     loadVuelos(catalog)
-    print("ya vuelos")
     loadCity(catalog)
 
 
@@ -58,10 +56,18 @@ def loadAirports(analyzer):
     """
     airportsfile = cf.data_dir + 'Skylines/airports-utf8-large.csv'
     input_file = csv.DictReader(open(airportsfile, encoding='utf-8'))
+    i=0
     for airport in input_file:
-
-        model.addAirport(analyzer, airport)
+        if i==0:
+            model.addAirport(analyzer, airport)
+            model.printAirport(analyzer,airport,i)
+            i=i+1
+        elif i!=0:
+            model.addAirport(analyzer,airport)
+            i=i+1
+    model.printAirport(analyzer,airport,i)
         
+
 def loadVuelos(analyzer):
     """
     carga los vuelos 
@@ -69,16 +75,30 @@ def loadVuelos(analyzer):
     
     Vuelosfile = cf.data_dir + 'Skylines/routes-utf8-large.csv'
     input_file = csv.DictReader(open(Vuelosfile, encoding='utf-8'))
+ 
     for vuelo in input_file:
-
+    
         model.addVuelos(analyzer, vuelo)
+            
+      
+
+        
 
 def loadCity(analyzer):
     Cityfile = cf.data_dir + 'Skylines/worldcities-utf8.csv'
     input_file = csv.DictReader(open(Cityfile, encoding='utf-8'))
+    i=0
     for city in input_file:
+        if i==0:
 
-        model.addCity(analyzer, city) 
+            model.addCity(analyzer, city)
+            model.printCity(analyzer,city,i)
+            i=i+1
+        elif i!=0:
+            model.addCity(analyzer, city)
+            i=i+1
+    model.printCity(analyzer,city,i)
+
 
 
 

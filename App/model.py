@@ -133,7 +133,18 @@ def addAirport(analyzer,airport):
         lt.addLast(nuevo, new)
         mp.put(analyzer["airportsByCity"],  city, nuevo)
     
-    
+def printAirport(analyzer,airport,i):
+    IATA=str(airport['IATA'])
+    new=newAirport(airport['Name'],airport['City'],airport['Country'],airport['Latitude'],airport['Longitude'], airport['IATA'])
+
+    if i==0:
+        print()
+        print()
+        print("El primer aeropuerto en cargarse es el aereopuerto:  " + new["name"] + " con codigo " + new['IATA'] + " de la ciudad " + new["city"] + " y del pais " + new["country"])
+    elif i!=0:
+         print("El último aeropuerto en cargarse es el aereopuerto:  " + new["name"] + " con codigo " + new['IATA'] + " de la ciudad " + new["city"] + " y del pais " + new["country"])
+
+
 
         
 def addVuelos(analyzer, vuelo):
@@ -156,6 +167,7 @@ def addVuelos(analyzer, vuelo):
     #si exsiste la relacion anterior en sentido contrario se agrega al no dirigido
     if gr.getEdge(GRAPHD, fin, inicio) != None:
         gr.addEdge(GRAPHND, inicio, fin, distancia)
+
 
 
 def addCity(analyzer, city):
@@ -186,6 +198,22 @@ def addCity(analyzer, city):
         nuevo=lt.newList()
         lt.addLast(nuevo, new)
         mp.put(analyzer["cityList"],  key, nuevo)
+
+
+def printCity(analyzer,city,i):
+
+    new={"city":city["city"], "country":city["country"], "lat":city["lat"], "lng":city["lng"], "population":city["population"]}
+    
+
+    if i==0:
+        print()
+        print()
+        print('La primera ciudad en cargarse es la ciudad: ' + new['city'] + '  con población: ' + new['population'] + ' con latitud:  ' + new['lat'] + '  y longitud:  ' + new['lng'])
+    elif i!=0:
+        print('La última ciudad en cargarse es la ciudad: ' + new['city'] + '  con población: ' + new['population'] + ' con latitud:  ' + new['lat'] + '  y longitud:  ' + new['lng'])
+
+
+
 
 
 # Funciones para creacion de datos
