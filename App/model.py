@@ -225,16 +225,18 @@ def compareIATA(iata1, iata2):
 # Funciones de ordenamiento
 
 def AeroCerrado(catalog, cerrado):
-    
+    #se saca el grafo dirigido
     principal = catalog["GRAPHD"]
-
+    #se sacan tando los adyacentes(Aereopuertos y vuelos afectados afectados)
     retorno1 = gr.adjacents(principal, cerrado)
     retorno2 = gr.degree(principal, cerrado)
 
     return [retorno1, retorno2]
 
 def ComponentesFuertes(catalog, ae1, ae2):
+    #se saca el grafo dirigido
     principal = catalog["GRAPHD"]
+    #se implementa Kosaraju y se busca si los componentes estan conectados
     kosa = scc.KosarajuSCC(principal)
     cantidad = scc.connectedComponents(kosa)
 
@@ -243,18 +245,19 @@ def ComponentesFuertes(catalog, ae1, ae2):
     return[cantidad, conectados]
 
 def viajeCiudades(catalog,city1,city2):
-    #determinar ciudad
 
+    #sacan las estructuras necesitadas
     principal = catalog["cityList"]
     Aereopuertos = catalog["airportsByCity"]
     grafo = catalog["GRAPHD"]
-
+    #se sacan las ciudades que comparten el mismo nombre
     listaC1 = mp.get(principal, city1)["value"]
     listaC2 = mp.get(principal, city2)["value"]
 
     C1 = None
     C2 = None
 
+    #se determina por el usuario cual ciudad es la que se va a buscar
     if lt.size(listaC1) >1:
         print("Encontramos ciudades omonimas")
         print("")
@@ -271,6 +274,7 @@ def viajeCiudades(catalog,city1,city2):
     else:
         C1 = lt.getElement(listaC1, 1)
 
+    #para ciudad 2
     if lt.size(listaC2) >1:
         print("Encontramos ciudades omonimas")
         print("")
@@ -294,8 +298,7 @@ def viajeCiudades(catalog,city1,city2):
     salida = None
     llegada = None
 
-    #para ciudad 1
-
+    #se busca el aereopuerto mas cercano 
     if lt.size(C1Aereo) > 1:
         
         val = []
@@ -338,7 +341,7 @@ def viajeCiudades(catalog,city1,city2):
     else:
         llegada = lt.getElement(C2Aereo, 1)
 
-
+    #se utiliza el algoritmo Dijkstra para ecnontrar la ruta mas rapida entre los dos aereopuertos
     caminos = djk.Dijkstra(grafo, salida["IATA"])
     ruta = djk.pathTo(caminos, llegada["IATA"])
 
