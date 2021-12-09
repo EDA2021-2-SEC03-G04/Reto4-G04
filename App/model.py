@@ -32,6 +32,10 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Algorithms.Sorting import mergesort as mrgsort
+from DISClib.Algorithms.Graphs import prim as prim
+from DISClib.ADT import queue as que
+from DISClib.Algorithms.Graphs import bellmanford as bellman
 from DISClib.ADT import stack
 from DISClib.ADT import map as m
 from DISClib.ADT.graph import gr
@@ -351,7 +355,109 @@ def viajeCiudades(catalog,city1,city2):
         print('No hay camino')
     """
 
+def AeroInter(catalog):
+    '''
+    Funcion que calcula el top 5 aeropuertos más interconectados
+    '''
+    #Toma el grafo dirigido
+    Graph=catalog['GRAPHD']
+    #Saca la lista de vertices 
+    VertexList=gr.vertices(Graph)
+    #Crea una lista vacía para guardar el top 5
+    ConnectedList=lt.newList()
+    #Contador para ir calculando el top 5
+    Top=0
+    #Recorre todos los vertices
+    for vertex in lt.iterator(VertexList):
+        #Calcula el degree de cada vertice
+        VertexDegree=gr.degree(Graph,vertex)
+
+        #Va guardando y actualizando el top5
+        if VertexDegree>Top:
+            #Saca la info necesaria para imprimir en consola
+            Indegree=gr.indegree(Graph,vertex)
+            Outdegree=gr.outdegree(Graph,vertex)
+            ElementInfo=mp.get(catalog['airports'],vertex)['value']
+            Name=ElementInfo['name']
+            City=ElementInfo['city']
+            Country=ElementInfo['country']
+            New={'vertex':vertex,'degree': VertexDegree,'name':Name,'city':City,'country':Country,'indegree':Indegree,'outdegree':Outdegree}
+            #Lo añade al top 5
+            lt.addLast(ConnectedList,New)
+            Top=VertexDegree
+
+    #Sortea la lista de top 5 
+    mrgsort.sort(ConnectedList,cmpByDegree)
+    return ConnectedList    
+
+def Miles(InputCity,Miles,catalog):
+    '''
+    Funcion que saca la rama más larga de el MST con raíz InputCity
+    '''
+    #Toma el grafo dirigido y el hashmap de la info de ciudades
+    Graph=catalog['GRAPHND']
+    CityInfoMap=catalog['airports']
+    #Calcula un MST
+    MST=prim.PrimMST(Graph)
+
+    #Saca la suma de los costos de todos los arcos del MST
+    MSTCost=prim.weightMST(Graph,MST)
+    #Saca el tamaño del MST
+    NumVertex=que.size(MST['mst'])
+    #Saca la info de la ciudad de input
+    Info=mp.get(CityInfoMap,InputCity)['value']
+    #Va viendo cuál es la rama más larga
+    longest=0
+
+    #Calcula el algoritmo de Dijkstra para la input city
+    #Bellman=bellman.BellmanFord(Graph,InputCity)
+    Dijk=djk.Dijkstra(Graph,InputCity)
+    Route=None
+
+    #Recorre todos los nodos del MST 
+    for Element in range(int(NumVertex)):
+        Element=que.dequeue(MST['mst'])
+       
+        In=Element['vertexA']
+        
+        #Calcula la mínima distancia entre la ciudad de input y el nodo del MST
+
+        #dist=bellman.distTo(Bellman,In)
+        dist=djk.distTo(Dijk,In)
+        
+        #print(dist>longest)
+        #if  dist > longest and dist !=float('inf') and bellman.pathTo(Bellman,In) != None:
+            #print('entré')
+            #print(dist)
+            #Route=In
+            #longest=dist
+        #Va actualizando la rama más larga y si sí pertenece al MST
+        if  dist > longest and dist !=float('inf') and djk.pathTo(Dijk,In) != None:
+            
+            Route=In
+            longest=dist
     
+    #route=bellman.pathTo(Bellman,Route)
+
+    #Calcula la ruta final
+    route=djk.pathTo(Dijk,Route)
+    #print(Route)
+    #print(bellman.distTo(Bellman,Route))
+    #print(route)
+
+
+
+    return MSTCost,Info,NumVertex,route
+
+
+
+def cmpByDegree(vertex1,vertex2):
+
+    degree1=vertex1['degree']
+    degree2=vertex2['degree']
+
+    return degree2<degree1
+
 
 
 

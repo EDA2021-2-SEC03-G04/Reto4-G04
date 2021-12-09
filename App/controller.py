@@ -95,3 +95,10 @@ def ComponentesFuertes(catalog, ae1, ae2):
 
 def viajeCiudades(catalog,city1,city2):
     return model.viajeCiudades(catalog,city1,city2)
+
+def AeroInter(catalog):
+    return model.AeroInter(catalog)
+
+def Miles(InputCity,Miles,catalog):
+    Miles=float(Miles)
+    return model.Miles(InputCity,Miles,catalog)

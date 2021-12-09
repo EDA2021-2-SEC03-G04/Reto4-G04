@@ -59,6 +59,19 @@ def printEspacio():
     print("")
 
 
+def printREQ1(retorno):
+
+    print()
+
+    print('Top 5 aeropuertos más interconectados: ')
+    print()
+    x=0
+    for Element in lt.iterator(retorno):
+        if x <5:
+            x=x+1
+            print(str(x) + ')  Nombre: ' + str(Element['name']) + '   Ciudad: ' + str(Element['city']) + '   País: ' + str(Element['country']) + '   IATA: ' + str(Element['vertex']) + '   Conexiones: ' + str(Element['degree']) + '   Inbound: ' + str(Element['indegree']) + '   Outbound: ' + str(Element['outdegree']))
+
+
 def printREQ6(retorno):
     aereo = retorno[0]
     rutas = retorno[1]
@@ -138,6 +151,38 @@ def printREQ3(retorno, city1, city2):
         info = mp.get(catalog["airports"], elemento)["value"]
         print("El aereopuerto " + info["name"] + " con codigo " + elemento + " de la ciudad " + info["city"] + " y del pais " + info["country"])
     
+def printREQ4(MSTCost,Info,InputCity,Miles,NumVertex,route):
+    print()
+    print('Información de ciudad de partida: ')
+    print()
+    print('IATA:  ' + str(InputCity) + '  Nombre:  ' + str(Info['name']) +  '  Ciudad:  ' + str(Info['city']) +  '  País:  ' + str(Info['country']))
+    print()
+    print('Número de posibles aeropuertos:    ' + str(NumVertex))
+    print()
+    print('Suma de distancias de posibles aeropurtos :  ' + str(MSTCost) + '  Km')
+    print()
+    print('Millas disponibles del viajero :' + str(float(Miles)*1.6) +  '  Km')
+
+    print('-'*80)
+    print()
+    print('La ruta (rama más larga del MST) más larga posible desde ' + str(InputCity) + '  es: ')
+    
+    i=0
+    tot=0
+    
+    for element in lt.iterator(route):
+        print(str(i) + ')  '+ ' Desde  ' + str(element['vertexA']) + '  hacia:  ' + str(element['vertexB']) +  '  con distancia  ' +  str(element['weight']) + '  km')
+        tot=tot+float(element['weight'])
+        i=i+1
+    print()
+    print()
+    print('Esta ruta tiene una distancia (ida y vuelta) de: ' + str(tot*2) + 'km')
+    print()
+    if float(Miles)*1.6  >= tot*2:
+        print('El viajero tiene millas suficientes')
+    else:
+        print('A el viajero le hacen falta  ' +  str(abs(tot*2-float(Miles)*1.6)) + 'km  para poder hacer el viaje ')
+
 
 
 """
@@ -182,9 +227,12 @@ while True:
         printEspacio()
 
 
-    elif int(inputs[0]) == 2:
+    elif int(inputs[0]) == 2: #REQ1
         
         printEspacio()
+        print('='*50 + 'RESPUESTA REQ1' + '='*50)
+        retorno=controller.AeroInter(catalog)
+        printREQ1(retorno)
 
         printEspacio()
 
@@ -218,9 +266,16 @@ while True:
         printEspacio()
 
 
-    elif int(inputs[0])==5:
+    elif int(inputs[0])==5: #REQ4
 
         printEspacio()
+        InputCity=input('Ingrese el código IATA de la ciudad de origen: ')
+        print()
+        Miles=input('Ingrese la cantidad de millas disponibles:  ')
+        MSTCost,Info,NumVertex,route=controller.Miles(InputCity,Miles,catalog)
+        print('='*50 + 'RESPUESTA REQ4' + '='*50)
+        printREQ4(MSTCost,Info,InputCity,Miles,NumVertex,route)
+
         
         printEspacio()
 
