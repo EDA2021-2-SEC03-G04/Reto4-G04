@@ -231,7 +231,14 @@ while True:
         
         printEspacio()
         print('='*50 + 'RESPUESTA REQ1' + '='*50)
+
+        StartTime=time.process_time()
         retorno=controller.AeroInter(catalog)
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'El REQ tardó {TimeMseg} miliseg')
+
         printREQ1(retorno)
 
         printEspacio()
@@ -244,7 +251,14 @@ while True:
         ae1 = input("Codigo IATA del aereopuerto 1(LED): ")
         ae2 = input("Codigo IATA del aereopuerto 2(RTP): ")
         print("")
+
+        StartTime=time.process_time()
         retorno = controller.ComponentesFuertes(catalog, ae1, ae2)
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'El REQ tardó {TimeMseg} miliseg')
+
 
         print('='*50 + 'RESPUESTA REQ2' + '='*50)
 
@@ -257,10 +271,17 @@ while True:
 
         printEspacio()
 
-        city1 = input("Ciudad de salida: ")
-        city2 = input("Ciudad llegada: ")
+        city1 = input("Ciudad de salida(St. Petersburg): ")
+        city2 = input("Ciudad llegada(Lisbon): ")
         print("")
+
+        StartTime=time.process_time()
         retorno = controller.viajeCiudades(catalog,city1,city2)
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'El REQ tardó {TimeMseg} miliseg')
+
         print("")
 
         print('='*50 + 'RESPUESTA REQ3' + '='*50)
@@ -273,10 +294,17 @@ while True:
     elif int(inputs[0])==5: #REQ4
 
         printEspacio()
-        InputCity=input('Ingrese el código IATA de la ciudad de origen: ')
+        InputCity=input('Ingrese el código IATA de la ciudad de origen(LIS): ')
         print()
-        Miles=input('Ingrese la cantidad de millas disponibles:  ')
+        Miles=input('Ingrese la cantidad de millas disponibles(19850.0):  ')
+
+        StartTime=time.process_time()
         MSTCost,Info,NumVertex,route=controller.Miles(InputCity,Miles,catalog)
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'El REQ tardó {TimeMseg} miliseg')
+
         print('='*50 + 'RESPUESTA REQ4' + '='*50)
         printREQ4(MSTCost,Info,InputCity,Miles,NumVertex,route)
 
@@ -291,7 +319,12 @@ while True:
         cerrado = input("Cual es el aereopuerto cerrado(DXB): ")
         print("")
 
+        StartTime=time.process_time()
         retorno = controller.AeroCerrado(catalog, cerrado)
+        StopTime=time.process_time()
+        TimeMseg=(StopTime-StartTime)*1000
+        print()
+        print(f'El REQ tardó {TimeMseg} miliseg')
 
         print('='*50 + 'RESPUESTA REQ5' + '='*50)
         printREQ6(retorno)
