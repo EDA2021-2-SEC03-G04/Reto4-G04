@@ -100,7 +100,7 @@ def printREQ2(retorno, ae1, ae2):
     if retorno[1]:
         print("Los aereopuertos estan fuertemente conectados")
     else:
-        print("los componetes no estan fuertemente conectados")
+        print("los aereopuertos no estan fuertemente conectados")
 
     print("")
     print("aereopuerto 1: ")
@@ -246,6 +246,8 @@ while True:
         print("")
         retorno = controller.ComponentesFuertes(catalog, ae1, ae2)
 
+        print('='*50 + 'RESPUESTA REQ2' + '='*50)
+
         printREQ2(retorno, ae1, ae2)
 
         printEspacio()
@@ -260,6 +262,8 @@ while True:
         print("")
         retorno = controller.viajeCiudades(catalog,city1,city2)
         print("")
+
+        print('='*50 + 'RESPUESTA REQ3' + '='*50)
 
         printREQ3(retorno, city1, city2)
 
@@ -289,6 +293,7 @@ while True:
 
         retorno = controller.AeroCerrado(catalog, cerrado)
 
+        print('='*50 + 'RESPUESTA REQ5' + '='*50)
         printREQ6(retorno)
 
         printEspacio() 
